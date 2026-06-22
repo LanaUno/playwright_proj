@@ -1,7 +1,6 @@
 import { test as base } from "@playwright/test";
 import { BasePage } from "../pages/base.page";
 import { HomePage } from "../pages/home.page";
-import "dotenv/config";
 
 type MyFixtures = {
     basePage: BasePage;

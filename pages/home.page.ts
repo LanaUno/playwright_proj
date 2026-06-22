@@ -126,19 +126,19 @@ export class HomePage extends BasePage {
 //   // ─── Actions ──────────────────────────────────────────────────────────────
 
   async open(): Promise<void> {
-    await this.page.goto('/', {
+    await this.page.goto("/", {
     waitUntil: 'domcontentloaded',
   });
   }
 
   async openWithNetworkIdle(): Promise<void> {
-  await this.page.goto('/', {
+  await this.page.goto("/", {
     waitUntil: 'networkidle',
   });
 }
 
   async openWithDomContentLoaded(): Promise<void> {
-  await this.page.goto('/', {
+  await this.page.goto("/", {
     waitUntil: 'domcontentloaded',
   });
 }
