@@ -14,10 +14,10 @@ test.describe('Modivo UA — Головна сторінка', () => {
   // 1. SEO / META
   // ─────────────────────────────────────────────
   test.describe('SEO та мета-теги', () => {
-    test('має правильний title', async ({ page }) => {
-      await expect(page).toHaveTitle(/MODIVO\.UA/i);
+    test('homepage has title', async ({ page }) => {
+      await expect(page).toHaveTitle(/Жіноча, чоловіча і дитяча мода/);
     });
-
+    
     test('має непорожній meta description', async ( {homePage} ) => {
       const content = await homePage.getMetaDescriptionContent();
       expect(content).toBeTruthy();
@@ -39,10 +39,6 @@ test.describe('Modivo UA — Головна сторінка', () => {
   // 2. HEADER
   // ─────────────────────────────────────────────
   test.describe('Header',  () => {
-
-    test('homepage has title', async ({ page }) => {
-      await expect(page).toHaveTitle(/Жіноча, чоловіча і дитяча мода/);
-    });
 
     test('логотип відображається', async ( {homePage} ) => {
       await expect(homePage.logo).toBeVisible();
