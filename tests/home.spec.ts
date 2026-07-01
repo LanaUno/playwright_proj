@@ -1,74 +1,68 @@
 import { expect } from '@playwright/test';
 import { test } from "../utils/fixtures";
+import homePageTextConstants from '../constants/homePageText.constants.json'
+import endpoints from '../constants/enpoints.constants.json'
 
-test.describe('Modivo UA — Головна сторінка', () => {
- 
+test.describe('Home page functionality', () => {
   test.beforeEach(async ({ page, homePage }) => {
     
     await homePage.open();
     await homePage.dismissCookieBanner();
     await page.setViewportSize({ width: 1400, height: 900 });
   });
-
   // ─────────────────────────────────────────────
   // 1. SEO / META
   // ─────────────────────────────────────────────
-  test.describe('SEO та мета-теги', () => {
     test('homepage has title', async ({ page }) => {
-      await expect(page).toHaveTitle(/Жіноча, чоловіча і дитяча мода/);
+      await expect(page).toHaveTitle(homePageTextConstants.homePageTitle);
     });
     
-    test('має непорожній meta description', async ( {homePage} ) => {
+    test('has a non-empty meta description', async ( {homePage} ) => {
       const content = await homePage.getMetaDescriptionContent();
       expect(content).toBeTruthy();
       expect(content!.length).toBeGreaterThan(20);
     });
 
-    test('має canonical URL що вказує на головну', async ( {homePage} ) => {
+    test('has a canonical URL that points to the main', async ( {homePage} ) => {
       const href = await homePage.getCanonicalHref();
       expect(href).toContain('modivo.ua');
     });
 
-    test('має og:title та og:description', async ( {homePage} ) => {
+    test('has og:title and og:description', async ( {homePage} ) => {
       await expect(homePage.metaOgTitle).toHaveAttribute('content', /.+/);
       await expect(homePage.metaOgDescription).toHaveAttribute('content', /.+/);
     });
-  });
-
   // ─────────────────────────────────────────────
   // 2. HEADER
   // ─────────────────────────────────────────────
-  test.describe('Header',  () => {
-
-    test('логотип відображається', async ( {homePage} ) => {
+    test('Header logo is displayed', async ( {homePage} ) => {
       await expect(homePage.logo).toBeVisible();
     });
 
-    test('клік на логотип залишає на домені modivo.ua', async ({ page, homePage }) => {
+    test('Clicking the Header logo keeps the user on the modivo.ua domain.', async ({ page, homePage }) => {
       await homePage.clickLogo();
-      await expect(page).toHaveURL(/modivo\.ua/);
+      await expect(page).toHaveURL(process.env.BASE_URL + endpoints.women);
     });
 
-    test('посилання "Ввійти" відображається та веде на /login', async ({ page, homePage }) => {
+    test('The "Ввійти" Header link is displayed and leads to /login.', async ({ page, homePage }) => {
       await expect(homePage.loginLink).toBeVisible();
       await homePage.clickLogin();
-      await expect(page).toHaveURL(/\/login/);
+      await expect(page).toHaveURL(process.env.BASE_URL + endpoints.login);
     });
 
-    test('посилання "Улюблене" відображається та веде на /wishlist', async ({ page, homePage }) => {
+    test('The "Улюблене" Header link is displayed and leads to /wishlist', async ({ page, homePage }) => {
       await expect(homePage.wishlistLink).toBeVisible();
       await homePage.clickWishlist();
-      await expect(page).toHaveURL(/\/wishlist/);
+      await expect(page).toHaveURL(process.env.BASE_URL + endpoints.wishlist);
     });
 
-    test('посилання "Кошик" відображається та веде на /checkout/cart', async ({ page, homePage  }) => {
+    test('The "Кошик" Header link is displayed and leads to /checkout/cart.', async ({ page, homePage  }) => {
       await expect(homePage.cartLink).toBeVisible();
       await homePage.clickCart();
-      await expect(page).toHaveURL(/\/checkout\/cart/);
+      await expect(page).toHaveURL(process.env.BASE_URL + endpoints.checkout + endpoints.cart);
     });
 
-    test('посилання "Допомога" відображається', async ({ homePage } ) => {
+    test('The "Допомога" Header link is displayed', async ({ homePage } ) => {
       await expect(homePage.helpLink).toBeVisible();
     });
-  });
 });

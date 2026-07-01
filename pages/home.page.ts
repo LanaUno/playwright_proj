@@ -1,5 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from './base.page';
+import endpoints from '../constants/enpoints.constants.json'
 
 export class HomePage extends BasePage {
 
@@ -10,7 +11,7 @@ export class HomePage extends BasePage {
   readonly metaOgDescription: Locator;
 
   // ─── Cookie banner ────────────────────────────────────────────────────────
-  readonly cookieAcceptButton: Locator;
+  //readonly cookieAcceptButton: Locator;
 
   // ─── Header ───────────────────────────────────────────────────────────────
   readonly logo: Locator;
@@ -63,6 +64,7 @@ export class HomePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
+    this.endpoint = endpoints.homepage;
 
     // Meta / SEO
     this.metaDescription    = page.locator('meta[name="description"]');
@@ -71,11 +73,11 @@ export class HomePage extends BasePage {
     this.metaOgDescription  = page.locator('meta[property="og:description"]');
 
     // Cookie banner
-    this.cookieAcceptButton = page.locator('button').filter({ hasText: /прийняти|згода|ok/i }).first();
+    //this.cookieAcceptButton = page.locator('button').filter({ hasText: /прийняти|згода|ok/i }).first();
 
     // Header
     this.logo       = page.locator('[data-test-id="header-logo-button"]');
-    // this.logoLink   = page.locator('a[href="/m/zhinky.html"], a[href="/"]').first();
+    this.logoLink   = page.locator('a[href="/m/zhinky.html"], a[href="/"]').first();
     this.loginLink  = page.locator('[class="header-tooltip account-tooltip"]:nth-child(1)');
     this.wishlistLink = page.locator('a[href="/wishlist"]').first();
     this.cartLink   = page.locator('a[href="/checkout/cart"]').first();
@@ -125,79 +127,50 @@ export class HomePage extends BasePage {
 
 //   // ─── Actions ──────────────────────────────────────────────────────────────
 
-  async open(): Promise<void> {
-    await this.page.goto("/", {
-    waitUntil: 'domcontentloaded',
-  });
+  async open() {
+    await super.open(this.endpoint);
   }
 
-  async openWithNetworkIdle(): Promise<void> {
-  await this.page.goto("/", {
-    waitUntil: 'networkidle',
-  });
-}
-
-  async openWithDomContentLoaded(): Promise<void> {
-  await this.page.goto("/", {
-    waitUntil: 'domcontentloaded',
-  });
-}
-
-  async dismissCookieBanner(): Promise<void> {
-    const isVisible = await this.cookieAcceptButton.isVisible({ timeout: 3000 }).catch(() => false);
-    if (isVisible) {
-      await this.cookieAcceptButton.click();
-    }
-  }
-
-  async clickLogo(): Promise<void> {
+  async clickLogo() {
     await this.logo.click();
   }
 
-  async clickLogin(): Promise<void> {
+  async clickLogin() {
     await this.loginLink.waitFor({ state: 'visible', timeout: 6000 });
     await this.loginLink.click();
   }
 
-  async clickWishlist(): Promise<void> {
+  async clickWishlist()  {
     await this.wishlistLink.click();
   }
 
-  async clickCart(): Promise<void> {
+  async clickCart() {
     await this.cartLink.click();
   }
 
-  async clickNavWomen(): Promise<void> {
+  async clickNavWomen(){
     await this.navWomenLink.click();
   }
 
-  async clickNavMen(): Promise<void> {
+  async clickNavMen() {
     await this.navMenLink.click();
   }
 
-  async clickNavKids(): Promise<void> {
+  async clickNavKids() {
     await this.navKidsLink.click();
   }
 
-  async hoverNavWomen(): Promise<void> {
+  async hoverNavWomen() {
     await this.navWomenLink.hover();
   }
 
-  async searchFor(query: string): Promise<void> {
+  async searchFor(query: string)  {
     await this.searchInput.fill(query);
     await this.searchInput.press('Enter');
   }
 
-  async typeInSearch(query: string): Promise<void> {
+  async typeInSearch(query: string) {
     await this.searchInput.fill(query);
-  }
-
-  async setMobileViewport(): Promise<void> {
-    await this.page.setViewportSize({ width: 375, height: 812 });
-  }
-
-  async setTabletViewport(): Promise<void> {
-    await this.page.setViewportSize({ width: 768, height: 1024 });
   }
 
   // ─── Getters ──────────────────────────────────────────────────────────────
